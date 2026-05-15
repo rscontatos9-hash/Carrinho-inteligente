@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrinho Inteligente</title>
-    <!-- Importando Fonte Montserrat -->
+
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --primary: linear-gradient(90deg, #7d5fff, #6c5ce7);
@@ -18,7 +19,6 @@
             --shopee-orange: #ee4d2d;
         }
 
-        /* POP-UP FLUTUANTE */
         #popup-overlay {
             position: fixed;
             top: 0;
@@ -42,12 +42,6 @@
             position: relative;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
         }
 
         .close-popup {
@@ -57,7 +51,6 @@
             font-size: 28px;
             color: #888;
             cursor: pointer;
-            line-height: 1;
         }
 
         .popup-link {
@@ -69,54 +62,6 @@
             border-radius: 15px;
             font-weight: bold;
             margin-top: 20px;
-            transition: 0.3s;
-        }
-
-        /* BANNER SHOPEE COM EFEITO DE LUZ */
-        .shopee-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 45px;
-            background-color: var(--shopee-orange);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            text-decoration: none;
-            overflow: hidden;
-        }
-
-        .shopee-banner::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -150%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transform: skewX(-20deg);
-            animation: lightPass 3s infinite;
-        }
-
-        @keyframes lightPass {
-            0% { left: -150%; }
-            30% { left: 150%; }
-            100% { left: 150%; }
-        }
-
-        .banner-content {
-            width: 90%;
-            max-width: 380px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            position: relative;
-            z-index: 2;
         }
 
         body {
@@ -124,14 +69,12 @@
             background-color: var(--bg-body);
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding-top: 60px;
+            padding-top: 20px;
         }
 
-        /* TÍTULO MODERNO */
         .app-title {
             font-family: 'Montserrat', sans-serif;
             text-align: center;
@@ -141,7 +84,6 @@
             background: var(--primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
         }
 
         .container {
@@ -169,8 +111,6 @@
             background: transparent;
         }
 
-        input::placeholder { color: var(--text-placeholder); }
-
         .qty-container {
             display: flex;
             align-items: center;
@@ -179,7 +119,6 @@
             border-radius: 15px;
             padding: 10px;
             margin-bottom: 25px;
-            border: 1px solid var(--border-color);
         }
 
         .btn-qty {
@@ -190,7 +129,6 @@
             height: 38px;
             border-radius: 10px;
             font-size: 20px;
-            font-weight: bold;
             cursor: pointer;
         }
 
@@ -210,77 +148,71 @@
         .btn-limpar {
             width: 100%;
             padding: 12px;
-            border: 2px solid var(--border-color);
             border-radius: 15px;
+            border: 2px solid var(--border-color);
             background: transparent;
             color: #888;
-            font-size: 14px;
-            font-weight: 600;
             cursor: pointer;
-            margin-bottom: 20px;
         }
 
-        #lista-itens { max-height: 150px; overflow-y: auto; margin-bottom: 20px; }
+        #lista-itens { max-height: 150px; overflow-y: auto; }
 
         .item-row {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: 8px 0;
             border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
         }
 
-        .footer-status { border-top: 2px solid #f8f9fa; padding-top: 20px; }
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        .footer-status { padding-top: 20px; }
 
         .barra-fundo {
             background: #eee;
             height: 12px;
             border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 12px;
         }
 
         #barra {
             height: 100%;
             width: 0%;
             background: var(--success);
-            transition: width 0.6s ease;
         }
 
-        #status-texto { text-align: center; font-weight: 700; font-size: 15px; color: #666; }
+        #status-texto { text-align: center; font-weight: 700; }
     </style>
 </head>
+
 <body>
 
-<!-- POP-UP INICIAL -->
 <div id="popup-overlay">
     <div class="popup-card">
         <span class="close-popup" onclick="closePopup()">×</span>
-        <h3 style="margin-top:0; color:#444; font-family: 'Montserrat', sans-serif;">Apoie o App! 🚀</h3>
-        <p style="color:#666; font-size:15px; line-height: 1.4;">Ajude a Manter Esse Projeto no Ar</p>
-        <a href="https://mpago.la/1tSv9ZG" target="_blank" class="popup-link">CONTRIBUIR AGORA</a>
+        <h3>Apoie o App 🚀</h3>
+        <a href="https://mpago.la/1tSv9ZG" target="_blank" class="popup-link">CONTRIBUIR</a>
     </div>
 </div>
 
-<!-- BANNER SHOPEE -->
-<a href="https://s.shopee.com.br/6fdoxIbNsC" target="_blank" class="shopee-banner">
-    <div class="banner-content">
-        <span>COMPRE BARATO COM FRETE GRÁTIS</span>
-        <div style="font-size:18px;">🛍️🛍️</div>
-    </div>
-</a>
-
-<h1 class="app-title">Carrinho Inteligente</h1>
+<h1 class="app-title">🛒 Carrinho Inteligente</h1>
 
 <div class="container">
     <div class="input-wrapper">
         <input type="number" id="orcamento" placeholder="R$ Digite aqui o Valor a Ser Gasto">
     </div>
 
-    <span style="font-size:14px; font-weight:600; color:#666; margin-left:5px;">Quantidade</span>
     <div class="qty-container">
         <button class="btn-qty" onclick="mudarQty(-1)">-</button>
-        <span id="quantidade-display" style="font-weight:700;">1</span>
+        <span id="quantidade-display">1</span>
         <button class="btn-qty" onclick="mudarQty(1)">+</button>
     </div>
 
@@ -302,99 +234,89 @@
 </div>
 
 <script>
-    let totalGasto = 0;
-    let qtdAtual = 1;
-    let sireneTocada = false;
-    let audioCtx = null;
+let totalGasto = 0;
+let qtdAtual = 1;
 
-    function closePopup() {
-        document.getElementById('popup-overlay').style.display = 'none';
+function closePopup() {
+    document.getElementById('popup-overlay').style.display = 'none';
+}
+
+function mudarQty(val) {
+    qtdAtual += val;
+    if (qtdAtual < 1) qtdAtual = 1;
+    document.getElementById("quantidade-display").innerText = qtdAtual;
+}
+
+document.querySelectorAll("input").forEach(input => {
+    input.addEventListener("focus", () => {
+        setTimeout(() => {
+            input.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 300);
+    });
+});
+
+function adicionar() {
+    const orcamentoTotal = parseFloat(document.getElementById("orcamento").value);
+    const valorUnitario = parseFloat(document.getElementById("valor_prod").value);
+
+    if (!orcamentoTotal || !valorUnitario) {
+        alert("Preencha os valores!");
+        return;
     }
 
-    function mudarQty(val) {
-        qtdAtual += val;
-        if (qtdAtual < 1) qtdAtual = 1;
-        document.getElementById("quantidade-display").innerText = qtdAtual;
-    }
+    const subtotal = valorUnitario * qtdAtual;
+    totalGasto += subtotal;
 
-    function tocarSireneAmbulancia() {
-        if (sireneTocada) return;
-        sireneTocada = true;
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const duration = 6000;
-        const endTime = audioCtx.currentTime + (duration / 1000);
-        function wail() {
-            if (audioCtx.currentTime >= endTime) return;
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(450, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.6);
-            osc.frequency.exponentialRampToValueAtTime(450, audioCtx.currentTime + 1.2);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.2);
-            setTimeout(wail, 1200);
-        }
-        wail();
-    }
+    const lista = document.getElementById("lista-itens");
+    const itemDiv = document.createElement("div");
+    itemDiv.className = "item-row";
 
-    function adicionar() {
-        const orcamentoTotal = parseFloat(document.getElementById("orcamento").value);
-        const valorUnitario = parseFloat(document.getElementById("valor_prod").value);
-        if (!orcamentoTotal || !valorUnitario) {
-            alert("Preencha os valores! 😉");
-            return;
-        }
-        const subtotal = valorUnitario * qtdAtual;
-        totalGasto += subtotal;
-        const lista = document.getElementById("lista-itens");
-        const itemDiv = document.createElement("div");
-        itemDiv.className = "item-row";
-        itemDiv.innerHTML = `<span>${qtdAtual}x Produto</span> <span>R$ ${subtotal.toFixed(2)}</span>`;
-        lista.prepend(itemDiv);
-        atualizarBarra(orcamentoTotal);
-        document.getElementById("valor_prod").value = "";
-        qtdAtual = 1;
-        document.getElementById("quantidade-display").innerText = "1";
-    }
+    itemDiv.innerHTML = `
+        <span>${qtdAtual}x Produto</span>
+        <span>R$ ${subtotal.toFixed(2)}</span>
+        <button class="btn-delete" onclick="removerItem(this, ${subtotal})">🗑️</button>
+    `;
 
-    function atualizarBarra(orcamentoTotal) {
-        const porcentagem = (totalGasto / orcamentoTotal) * 100;
-        const barra = document.getElementById("barra");
-        const statusTxt = document.getElementById("status-texto");
-        const restante = orcamentoTotal - totalGasto;
-        barra.style.width = Math.min(porcentagem, 100) + "%";
-        
-        // SIRENE APENAS QUANDO ESTOURA (RESTANTE NEGATIVO)
-        if (restante < 0) {
-            barra.style.background = "var(--danger)";
-            tocarSireneAmbulancia();
-            statusTxt.style.color = "var(--danger)";
-            statusTxt.innerText = `ESTOUROU: R$ ${Math.abs(restante).toFixed(2)} 🚨`;
-        } else {
-            barra.style.background = porcentagem >= 80 ? "var(--warning)" : "var(--success)";
-            statusTxt.style.color = "#666";
-            statusTxt.innerText = `Resta: R$ ${restante.toFixed(2)} (${porcentagem.toFixed(0)}%)`;
-        }
-    }
+    lista.prepend(itemDiv);
 
-    function limparTudo() {
-        if (confirm("Limpar tudo? 🧐")) {
-            totalGasto = 0;
-            qtdAtual = 1;
-            sireneTocada = false;
-            document.getElementById("lista-itens").innerHTML = "";
-            document.getElementById("barra").style.width = "0%";
-            document.getElementById("barra").style.background = "var(--success)";
-            document.getElementById("status-texto").innerText = "Aguardando orçamento...";
-            document.getElementById("orcamento").value = "";
-            document.getElementById("valor_prod").value = "";
-        }
+    atualizarBarra(orcamentoTotal);
+
+    document.getElementById("valor_prod").value = "";
+    qtdAtual = 1;
+    document.getElementById("quantidade-display").innerText = "1";
+}
+
+function removerItem(botao, valor) {
+    if (!confirm("Deseja remover este item? 🧐")) return;
+
+    const orcamentoTotal = parseFloat(document.getElementById("orcamento").value);
+    totalGasto -= valor;
+    botao.parentElement.remove();
+    atualizarBarra(orcamentoTotal);
+}
+
+function atualizarBarra(orcamentoTotal) {
+    const porcentagem = (totalGasto / orcamentoTotal) * 100;
+    const barra = document.getElementById("barra");
+    const statusTxt = document.getElementById("status-texto");
+
+    barra.style.width = Math.min(porcentagem, 100) + "%";
+
+    const restante = orcamentoTotal - totalGasto;
+
+    statusTxt.innerText = restante < 0
+        ? `ESTOUROU: R$ ${Math.abs(restante).toFixed(2)}`
+        : `Resta: R$ ${restante.toFixed(2)}`;
+}
+
+function limparTudo() {
+    if (confirm("Limpar tudo?")) {
+        totalGasto = 0;
+        document.getElementById("lista-itens").innerHTML = "";
+        document.getElementById("barra").style.width = "0%";
+        document.getElementById("status-texto").innerText = "Aguardando orçamento...";
     }
+}
 </script>
 
 </body>
