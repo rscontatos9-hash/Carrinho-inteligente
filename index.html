@@ -1,207 +1,163 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrinho Inteligente</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrinho Inteligente</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
 
-    <style>
-        :root {
-            --primary: linear-gradient(90deg, #7d5fff, #6c5ce7);
-            --bg-body: #f0f2f5;
-            --text-placeholder: rgba(0, 0, 0, 0.3);
-            --border-color: #edeff2;
-            --success: #2ed573;
-            --warning: #ffa502;
-            --danger: #ff4757;
-            --shopee-orange: #ee4d2d;
-        }
+<style>
+:root {
+    --primary: linear-gradient(90deg, #7d5fff, #6c5ce7);
+    --bg-body: #f0f2f5;
+    --text-placeholder: rgba(0, 0, 0, 0.3);
+    --border-color: #edeff2;
+    --success: #2ed573;
+    --warning: #ffa502;
+    --danger: #ff4757;
+}
 
-        #popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
+@keyframes pulsar {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
 
-        .popup-card {
-            background: white;
-            width: 85%;
-            max-width: 320px;
-            padding: 30px;
-            border-radius: 25px;
-            position: relative;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg-body);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 20px;
+}
 
-        .close-popup {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            color: #888;
-            cursor: pointer;
-        }
+.app-title {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    background: var(--primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        .popup-link {
-            display: block;
-            background: var(--primary);
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: 15px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
+.container {
+    background: white;
+    padding: 30px;
+    width: 90%;
+    max-width: 380px;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg-body);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding-top: 20px;
-        }
+.input-wrapper {
+    display: flex;
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+}
 
-        .app-title {
-            font-family: 'Montserrat', sans-serif;
-            text-align: center;
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 15px;
-            background: var(--primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    background: transparent;
+}
 
-        .container {
-            background: white;
-            padding: 30px;
-            width: 90%;
-            max-width: 380px;
-            border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-        }
+.qty-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 25px;
+}
 
-        .input-wrapper {
-            display: flex;
-            border: 2px solid var(--border-color);
-            border-radius: 15px;
-            padding: 12px 18px;
-            margin-bottom: 20px;
-        }
+.btn-qty {
+    background: #7d5fff;
+    color: white;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
 
-        input {
-            border: none;
-            outline: none;
-            width: 100%;
-            font-size: 16px;
-            background: transparent;
-        }
+.main-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 15px;
+    background: var(--primary);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 12px;
+}
 
-        .qty-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 10px;
-            margin-bottom: 25px;
-        }
+.btn-limpar {
+    width: 100%;
+    padding: 12px;
+    border-radius: 15px;
+    border: 2px solid var(--border-color);
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+}
 
-        .btn-qty {
-            background: #7d5fff;
-            color: white;
-            border: none;
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            font-size: 20px;
-            cursor: pointer;
-        }
+#lista-itens { max-height: 150px; overflow-y: auto; }
 
-        .main-btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 15px;
-            background: var(--primary);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 12px;
-        }
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
 
-        .btn-limpar {
-            width: 100%;
-            padding: 12px;
-            border-radius: 15px;
-            border: 2px solid var(--border-color);
-            background: transparent;
-            color: #888;
-            cursor: pointer;
-        }
+.btn-delete {
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
 
-        #lista-itens { max-height: 150px; overflow-y: auto; }
+.footer-status { padding-top: 20px; }
 
-        .item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
+.barra-fundo {
+    background: #eee;
+    height: 12px;
+    border-radius: 20px;
+    overflow: hidden;
+}
 
-        .btn-delete {
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 4px 8px;
-            cursor: pointer;
-        }
+#barra {
+    height: 100%;
+    width: 0%;
+    background: var(--success);
+    transition: 0.3s;
+}
 
-        .footer-status { padding-top: 20px; }
-
-        .barra-fundo {
-            background: #eee;
-            height: 12px;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        #barra {
-            height: 100%;
-            width: 0%;
-            background: var(--success);
-        }
-
-        #status-texto { text-align: center; font-weight: 700; }
-    </style>
+#status-texto {
+    text-align: center;
+    font-weight: 700;
+}
+</style>
 </head>
 
 <body>
-
-<div id="popup-overlay">
-    <div class="popup-card">
-        <span class="close-popup" onclick="closePopup()">×</span>
-        <h3>Apoie o App 🚀</h3>
-        <a href="https://mpago.la/1tSv9ZG" target="_blank" class="popup-link">CONTRIBUIR</a>
-    </div>
-</div>
 
 <h1 class="app-title">🛒 Carrinho Inteligente</h1>
 
@@ -233,27 +189,19 @@
     </div>
 </div>
 
+<!-- SOM DE SIRENE -->
+<audio id="sirene" src="https://actions.google.com/sounds/v1/alarms/siren.ogg"></audio>
+
 <script>
 let totalGasto = 0;
 let qtdAtual = 1;
-
-function closePopup() {
-    document.getElementById('popup-overlay').style.display = 'none';
-}
+let alertaAtivo = false;
 
 function mudarQty(val) {
     qtdAtual += val;
     if (qtdAtual < 1) qtdAtual = 1;
     document.getElementById("quantidade-display").innerText = qtdAtual;
 }
-
-document.querySelectorAll("input").forEach(input => {
-    input.addEventListener("focus", () => {
-        setTimeout(() => {
-            input.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 300);
-    });
-});
 
 function adicionar() {
     const orcamentoTotal = parseFloat(document.getElementById("orcamento").value);
@@ -299,8 +247,31 @@ function atualizarBarra(orcamentoTotal) {
     const porcentagem = (totalGasto / orcamentoTotal) * 100;
     const barra = document.getElementById("barra");
     const statusTxt = document.getElementById("status-texto");
+    const sirene = document.getElementById("sirene");
 
     barra.style.width = Math.min(porcentagem, 100) + "%";
+
+    if (porcentagem > 100) {
+        barra.style.background = "var(--danger)";
+        barra.style.animation = "pulsar 0.6s infinite";
+
+        if (!alertaAtivo) {
+            alertaAtivo = true;
+            sirene.currentTime = 0;
+            sirene.play();
+
+            setTimeout(() => {
+                sirene.pause();
+                alertaAtivo = false;
+            }, 6000);
+        }
+
+    } else {
+        barra.style.background = "var(--success)";
+        barra.style.animation = "none";
+        sirene.pause();
+        alertaAtivo = false;
+    }
 
     const restante = orcamentoTotal - totalGasto;
 
@@ -314,7 +285,11 @@ function limparTudo() {
         totalGasto = 0;
         document.getElementById("lista-itens").innerHTML = "";
         document.getElementById("barra").style.width = "0%";
+        document.getElementById("barra").style.background = "var(--success)";
+        document.getElementById("barra").style.animation = "none";
         document.getElementById("status-texto").innerText = "Aguardando orçamento...";
+        document.getElementById("sirene").pause();
+        alertaAtivo = false;
     }
 }
 </script>
