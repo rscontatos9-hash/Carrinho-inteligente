@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  <script>
+  (function() {
+    // Função que abre URL no navegador do sistema
+    function abrirExterno(url) {
+      // Tenta abrir com _system (funciona na maioria dos WebViews do Kodular)
+      window.open(url, '_system');
+      // Fallback: se o _system não funcionar, tenta via Intent (Android)
+      setTimeout(function() {
+        window.location.href = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=http;package=com.android.chrome;end';
+      }, 100);
+    }
+
+    // Captura todos os cliques no documento
+    document.addEventListener('click', function(e) {
+      // Encontra o elemento <a> mais próximo do clique
+      let link = e.target.closest('a');
+      if (link && link.href) {
+        e.preventDefault();  // Impede o carregamento dentro da WebView
+        abrirExterno(link.href);
+      }
+    });
+  })();
+</script>  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carrinho Inteligente</title>
